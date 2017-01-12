@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 var verifier = require('email-verify')
 var ProgressBar = require('progress')
 var fs = require('fs')
