@@ -1,22 +1,22 @@
 #!/usr/bin/env node
 
-var verifier = require('email-verify')
-var ProgressBar = require('progress')
-var fs = require('fs')
-var del = require('delete')
-var path = require('path')
-var input = process.argv[2]
+const verifier = require('email-verify')
+const ProgressBar = require('progress')
+const fs = require('fs')
+const del = require('delete')
+const path = require('path')
+const input = process.argv[2]
 
-var validEmailPath = 'valid-emails.txt'
-var invalidEmailPath = 'invalid-emails.txt'
+const validEmailPath = 'valid-emails.txt'
+const invalidEmailPath = 'invalid-emails.txt'
 
 del.sync([validEmailPath, invalidEmailPath])
 
 fs.readFile(input, function (err, data) {
   if (err) throw err
-  var emails = data.toString().split('\n').filter(Boolean)
+  const emails = data.toString().split('\n').filter(Boolean)
 
-  var bar = new ProgressBar('  verifying [:bar] :percent :etas', {
+  const bar = new ProgressBar('  verifying [:bar] :percent :etas', {
     complete: '=',
     incomplete: ' ',
     width: 20,
@@ -25,9 +25,8 @@ fs.readFile(input, function (err, data) {
 
   emails.forEach(function (email) {
     verifier.verify(email, function (err, info) {
-      if (err) throw err
       bar.tick()
-      var outputFilePath = path.join(process.cwd(), (info.success ? validEmailPath : invalidEmailPath))
+      const outputFilePath = path.join(process.cwd(), (err || !info.success ? invalidEmailPath : validEmailPath))
       fs.appendFile(outputFilePath, email + '\n', function (err) {
         if (err) throw err
       })
